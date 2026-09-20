@@ -1,11 +1,17 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, UploadFile
+from PIL import Image
+
+from image_classifier.model import predict
 
 app = FastAPI()
 
+
 @app.get("/health")
 def health():
-    print("someone hit /health!")
     return {"status": "ok"}
 
-def main():
-    print("Hello from image-classifier!")   
+
+@app.post("/predict")
+def predict_image(file: UploadFile):
+    image = Image.open(file.file).convert("RGB")
+    return predict(image)
