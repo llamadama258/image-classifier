@@ -1,5 +1,5 @@
-from fastapi import FastAPI, UploadFile
-from PIL import Image
+from fastapi import FastAPI, HTTPException, UploadFile
+from PIL import Image, UnidentifiedImageError
 
 from image_classifier.model import predict
 
@@ -13,5 +13,9 @@ def health():
 
 @app.post("/predict")
 def predict_image(file: UploadFile):
-    image = Image.open(file.file).convert("RGB")
+    try:
+        image = Image.open(file.file).convert("RGB")
+    except UnidentifiedImageError:
+        raise HTTPException(status_code=400, detail="File is not a valid image")
+
     return predict(image)
