@@ -13,3 +13,5 @@ wheels/
 inspect_model.py
 check.py
 scratch/
+data/
+*.zip
